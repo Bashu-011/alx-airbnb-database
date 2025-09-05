@@ -1,6 +1,5 @@
 -- Initial unoptimized query that gets user details
 -- all bookings and related payments
-
 SELECT 
     b.booking_id,
     b.start_date,
@@ -25,7 +24,9 @@ JOIN User u
 JOIN Property p
     ON b.property_id = p.property_id
 LEFT JOIN Payment pay
-    ON b.booking_id = pay.booking_id;
+    ON b.booking_id = pay.booking_id
+WHERE b.status = 'confirmed'
+  AND b.start_date >= '2025-01-01';
 
 -- performance analysis on the unoptimized code
 EXPLAIN ANALYZE
@@ -53,13 +54,17 @@ JOIN User u
 JOIN Property p
     ON b.property_id = p.property_id
 LEFT JOIN Payment pay
-    ON b.booking_id = pay.booking_id;
+    ON b.booking_id = pay.booking_id
+WHERE b.status = 'confirmed'
+  AND b.start_date >= '2025-01-01';
 
 -- Indexing
 CREATE INDEX idx_booking_user_id ON Booking(user_id);
 CREATE INDEX idx_booking_property_id ON Booking(property_id);
 CREATE INDEX idx_payment_booking_id ON Payment(booking_id);
 CREATE INDEX idx_user_email ON User(email);
+CREATE INDEX idx_booking_status ON Booking(status);
+CREATE INDEX idx_booking_start_date ON Booking(start_date);
 
 -- the optimized sql query
 SELECT 
@@ -83,7 +88,9 @@ INNER JOIN User u
 INNER JOIN Property p
     ON b.property_id = p.property_id
 LEFT JOIN Payment pay
-    ON b.booking_id = pay.booking_id;
+    ON b.booking_id = pay.booking_id
+WHERE b.status = 'confirmed'
+  AND b.start_date >= '2025-01-01';
 
 
 
