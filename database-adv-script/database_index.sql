@@ -13,10 +13,10 @@ CREATE INDEX idx_property_location ON Property(location);
 CREATE INDEX idx_property_price ON Property(pricepernight);
 
 
-EXPLAIN
-SELECT u.first_name, u.last_name, b.booking_id, b.start_date, b.status
-FROM User u
-JOIN Booking b ON u.user_id = b.user_id
-WHERE u.email = 'test123@gmail.com'
-  AND b.status = 'confirmed';
+EXPLAIN ANALYZE
+SELECT *
+FROM Property
+WHERE location = 'Nairobi'
+ORDER BY pricepernight;
+
 
